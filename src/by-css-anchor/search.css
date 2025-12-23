@@ -1,8 +1,0 @@
-#customcss [data-css-anchor="search"] {
-  display: flex;
-  gap: 10px;
-}
-
-#customcss [data-css-anchor="search"] input {
-  border: 1px solid #ccc;
-}
