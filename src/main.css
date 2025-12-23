@@ -8,8 +8,6 @@
 @import "./by-css-anchor/common-content.css";
 @import "./by-css-anchor/community-navigation.css";
 @import "./by-css-anchor/cookie-banner.css";
-@import "./by-css-anchor/customization-configurator-toolbar.css";
-@import "./by-css-anchor/dashboard.css";
 @import "./by-css-anchor/event-types.css";
 @import "./by-css-anchor/event.css";
 @import "./by-css-anchor/events-overview-new.css";
@@ -46,7 +44,6 @@
 @import "./by-css-anchor/site-wide.css";
 @import "./by-css-anchor/skip-to-content.css";
 @import "./by-css-anchor/sorting-dropdown-component.css";
-@import "./by-css-anchor/theme-configurator.css";
 @import "./by-css-anchor/threaded-replies.css";
 @import "./by-css-anchor/topic-helpfulness.css";
 @import "./by-css-anchor/topic-list-item-card.css";
@@ -70,8 +67,6 @@
 @import "./by-css-anchor/widget-dynamic_content.css";
 @import "./by-css-anchor/widget-event_calendar.css";
 @import "./by-css-anchor/widget-featured_topics.css";
-@import "./by-css-anchor/widget-gainsight-px-activation.css";
-@import "./by-css-anchor/widget-gainsight-px-script.css";
 @import "./by-css-anchor/widget-generic_hero.css";
 @import "./by-css-anchor/widget-group_overview.css";
 @import "./by-css-anchor/widget-groups.css";
@@ -92,5 +87,4 @@
 @import "./by-css-anchor/widget-spaces_integration.css";
 @import "./by-css-anchor/widget-statistics_bar.css";
 @import "./by-css-anchor/widget-tag_cloud.css";
-@import "./by-css-anchor/widget-third_party_widget.css";
 @import "./by-css-anchor/widget-topic_banner.css";
