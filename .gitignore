@@ -3,6 +3,7 @@ node_modules/
 
 # Build output
 dist/
+backups/
 
 # Input bundles (keep folder, ignore contents)
 input/*

@@ -1,15 +1,21 @@
 /**
- * CSS Anchor Router
+ * CSS Router
  * 
- * Parses CSS and routes rules to files based on data-css-anchor selectors.
+ * Parses CSS bundles and routes content back to source files.
  * 
- * Routing logic:
- * - Single anchor → src/widgets/{anchor}.css
+ * Primary routing: File markers (/* @file: path *​/)
+ * Fallback routing: data-css-anchor selectors
+ * 
+ * Routing logic for unmarked content:
+ * - Single anchor → src/by-css-anchor/{anchor}.css
  * - No anchor or multiple anchors → src/common/global.css
  * - Parse errors → src/quarantine.css
  */
 
 import postcss, { Root, Rule, AtRule, Comment, Node } from 'postcss';
+
+/** File marker prefix */
+const FILE_MARKER_PREFIX = '@file:';
 
 /** Regex to extract data-css-anchor values from selectors */
 const ANCHOR_REGEX = /\[data-css-anchor=["']([^"']+)["']\]/g;
@@ -97,7 +103,26 @@ function nodeToString(node: Node): string {
 }
 
 /**
- * Parse and route a CSS bundle into separate files
+ * Check if a comment is a file marker
+ */
+function isFileMarker(text: string): boolean {
+  return text.trim().startsWith(FILE_MARKER_PREFIX);
+}
+
+/**
+ * Extract file path from a file marker comment
+ */
+function parseFileMarker(text: string): string | null {
+  const trimmed = text.trim();
+  if (!trimmed.startsWith(FILE_MARKER_PREFIX)) return null;
+  return trimmed.slice(FILE_MARKER_PREFIX.length).trim() || null;
+}
+
+/**
+ * Parse and route a CSS bundle into separate files.
+ * 
+ * Uses file markers (/* @file: path *​/) as primary routing.
+ * Falls back to anchor-based routing for unmarked content.
  */
 export function routeBundle(cssContent: string): RoutedBundle {
   const files = new Map<string, string[]>();
@@ -121,24 +146,53 @@ export function routeBundle(cssContent: string): RoutedBundle {
     return { files, quarantine, errors };
   }
   
+  // Track current file from markers
+  let currentFile: string | null = null;
+  
   // Process each top-level node
   root.nodes?.forEach((node) => {
     try {
+      // Check for file markers
+      if (node.type === 'comment') {
+        const comment = node as Comment;
+        const markerPath = parseFileMarker(comment.text);
+        
+        if (markerPath) {
+          // File marker found - switch to this file
+          currentFile = markerPath;
+          return; // Don't output the marker itself
+        }
+        
+        // Regular comment - skip banners, route others
+        const text = comment.text.trim();
+        if (text.startsWith('!') || text.includes('Version:')) {
+          return; // Skip banner comments
+        }
+        
+        // Route comment to current file or global
+        const targetFile = currentFile || getFilePath({ type: 'global' });
+        addToFile(targetFile, nodeToString(node));
+        return;
+      }
+      
+      // For rules and at-rules, use marker-based routing if available
+      if (currentFile) {
+        addToFile(currentFile, nodeToString(node));
+        return;
+      }
+      
+      // Fallback: anchor-based routing for unmarked content
       if (node.type === 'rule') {
-        // Regular CSS rule - route based on selectors
         const rule = node as Rule;
         const selectors = rule.selector.split(',').map(s => s.trim());
         const route = routeSelectors(selectors);
-        const filePath = getFilePath(route);
-        addToFile(filePath, nodeToString(node));
+        addToFile(getFilePath(route), nodeToString(node));
         
       } else if (node.type === 'atrule') {
-        // At-rule (@media, @keyframes, etc.)
         const atRule = node as AtRule;
         
         if (atRule.name === 'media' || atRule.name === 'supports') {
-          // For @media/@supports, we need to look inside for anchors
-          // Route based on the rules inside
+          // Route based on anchors inside
           const innerAnchors = new Set<string>();
           
           atRule.walkRules((innerRule) => {
@@ -160,17 +214,7 @@ export function routeBundle(cssContent: string): RoutedBundle {
           addToFile(getFilePath(route), nodeToString(node));
           
         } else {
-          // Other at-rules (@keyframes, @font-face, etc.) → global
-          addToFile(getFilePath({ type: 'global' }), nodeToString(node));
-        }
-        
-      } else if (node.type === 'comment') {
-        // Preserve comments - attach to global unless it's a banner
-        const comment = node as Comment;
-        const text = comment.text.trim();
-        
-        // Skip banner comments (typically at top of file)
-        if (!text.startsWith('!') && !text.includes('Version:')) {
+          // Other at-rules → global
           addToFile(getFilePath({ type: 'global' }), nodeToString(node));
         }
         

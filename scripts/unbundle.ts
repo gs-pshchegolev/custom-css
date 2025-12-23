@@ -3,13 +3,10 @@
 /**
  * Unbundle Script
  * 
- * Reads the bundled CSS file and routes rules to source files
- * based on data-css-anchor selectors.
+ * Reads the bundled CSS file and splits it back into source files
+ * based on file markers injected during build.
  * 
- * Routing logic:
- * - Single anchor → src/by-css-anchor/{anchor}.css
- * - No anchor or multiple anchors → src/common/global.css
- * - Parse errors → src/quarantine.css
+ * Marker format: /* @file: src/by-css-anchor/header.css *​/
  * 
  * Usage: npm run unbundle
  */
@@ -23,9 +20,35 @@ import {
   QUARANTINE_PATH,
   writeFileSafe,
   fileExists,
-  routeBundle,
-  formatFileContent
-} from './lib';
+} from "./lib";
+import { parseFileMarker } from "./plugins/css-file-markers";
+
+/** Regex to match file markers */
+const FILE_MARKER_REGEX = /\/\*\s*@file:\s*([^\s*]+)\s*\*\//g;
+
+/**
+ * Parse bundle by file markers
+ */
+function parseByMarkers(bundleContent: string): Map<string, string> {
+  const files = new Map<string, string>();
+
+  // Split by markers, keeping the markers
+  const parts = bundleContent.split(FILE_MARKER_REGEX);
+
+  // parts alternates: [content-before-first-marker, path1, content1, path2, content2, ...]
+  // The first element is content before any marker (usually just the banner comment)
+
+  for (let i = 1; i < parts.length; i += 2) {
+    const filePath = parts[i]?.trim();
+    const content = parts[i + 1]?.trim();
+
+    if (filePath && content) {
+      files.set(filePath, content + "\n");
+    }
+  }
+
+  return files;
+}
 
 /**
  * Generate quarantine file header
@@ -50,8 +73,8 @@ function generateQuarantineHeader(): string {
  * Main unbundle function
  */
 function unbundle(): void {
-  console.log('🔄 Starting unbundle process...\n');
-  
+  console.log("🔄 Starting unbundle process...\n");
+
   // Check if bundle exists
   if (!fileExists(INPUT_BUNDLE_PATH)) {
     console.error(`❌ Bundle not found at: ${INPUT_BUNDLE_PATH}`);
@@ -59,53 +82,55 @@ function unbundle(): void {
     console.error(`   📁 ${INPUT_DIR}/platform-bundle.css`);
     process.exit(1);
   }
-  
+
   // Read the bundle
-  const bundleContent = readFileSync(INPUT_BUNDLE_PATH, 'utf8');
+  const bundleContent = readFileSync(INPUT_BUNDLE_PATH, "utf8");
   console.log(`📖 Read bundle: ${INPUT_BUNDLE_PATH}`);
   console.log(`   Size: ${bundleContent.length} bytes\n`);
-  
-  // Route the CSS rules
-  const { files, quarantine, errors } = routeBundle(bundleContent);
-  
-  // Report any parsing errors
-  if (errors.length > 0) {
-    console.log('⚠️  Parsing warnings:');
-    errors.forEach(err => console.log(`   ${err}`));
-    console.log('');
+
+  // Check for file markers
+  const hasMarkers = FILE_MARKER_REGEX.test(bundleContent);
+  FILE_MARKER_REGEX.lastIndex = 0; // Reset regex
+
+  if (!hasMarkers) {
+    console.error("❌ No file markers found in bundle!");
+    console.error(
+      "   The bundle must be created with `npm run build` to include markers."
+    );
+    console.error(
+      "   If this is an external bundle, file markers are required for unbundling."
+    );
+    process.exit(1);
   }
-  
-  // Write routed files
+
+  // Parse by file markers
+  const files = parseByMarkers(bundleContent);
+
+  // Write files
   let updatedCount = 0;
-  const anchorCount = { count: 0 };
-  
-  for (const [filePath, rules] of files) {
+  let anchorCount = 0;
+
+  for (const [filePath, content] of files) {
+    // Skip main.css - it only contains @import statements
+    if (filePath === "src/main.css") {
+      console.log(`⏭️  Skipped: ${filePath} (manifest file)`);
+      continue;
+    }
+
     const fullPath = join(ROOT_DIR, filePath);
-    const content = formatFileContent(rules);
     writeFileSafe(fullPath, content);
-    
-    if (filePath.startsWith('src/by-css-anchor/')) {
-      anchorCount.count++;
+
+    if (filePath.startsWith("src/by-css-anchor/")) {
+      anchorCount++;
       console.log(`✅ Anchor: ${filePath}`);
     } else {
       console.log(`✅ Updated: ${filePath}`);
     }
     updatedCount++;
   }
-  
-  console.log(`\n📝 Updated ${updatedCount} file(s) (${anchorCount.count} anchors)`);
-  
-  // Handle quarantined CSS
-  if (quarantine.length > 0) {
-    const quarantineContent = generateQuarantineHeader() + quarantine.join('\n\n') + '\n';
-    writeFileSafe(QUARANTINE_PATH, quarantineContent);
-    console.log(`\n⚠️  Some CSS couldn't be parsed! Saved to: src/quarantine.css`);
-  } else {
-    console.log('\n✨ All CSS successfully routed');
-  }
-  
-  console.log('\n💡 Run "npm run sync" to check main.css imports');
-  console.log('\n🎉 Unbundle complete!');
+
+  console.log(`\n📝 Updated ${updatedCount} file(s) (${anchorCount} anchors)`);
+  console.log("\n🎉 Unbundle complete!");
 }
 
 // Run the script

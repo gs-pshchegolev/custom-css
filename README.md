@@ -8,7 +8,6 @@ A round-trip CSS build system for managing platform styles. Supports both **deve
 npm install
 npm run build      # Build CSS bundle from source
 npm run unbundle   # Extract CSS from community bundle
-npm run sync       # Check/fix main.css imports
 ```
 
 ## Folder Structure
@@ -68,25 +67,23 @@ Extract CSS from a community bundle back into organized source files.
 ```mermaid
 flowchart LR
     subgraph input[Input]
-        community[platform-bundle.css<br/>from community]
+        community[platform-bundle.css<br/>with file markers]
     end
     
     subgraph process[Processing]
         unbundle[npm run unbundle]
-        routing{Route by<br/>data-css-anchor}
+        parse{Parse by<br/>file markers}
     end
     
     subgraph src[Source Files]
         global[common/global.css]
         widgets[by-css-anchor/*.css]
-        quarantine[quarantine.css]
     end
     
     community --> unbundle
-    unbundle --> routing
-    routing --> |no anchor| global
-    routing --> |single anchor| widgets
-    routing --> |parse error| quarantine
+    unbundle --> parse
+    parse --> global
+    parse --> widgets
 ```
 
 **Commands:**
@@ -96,9 +93,6 @@ cp ~/Downloads/community-styles.css input/platform-bundle.css
 
 # 2. Run unbundle
 npm run unbundle
-
-# 3. Sync main.css imports
-npm run sync --fix
 ```
 
 ---
@@ -118,7 +112,6 @@ flowchart TD
         unbundle[npm run unbundle]
         src[src/ files]
         edit[Edit source files]
-        sync[npm run sync --fix]
         build[npm run build]
         output[dist/platform-bundle.css]
     end
@@ -131,8 +124,7 @@ flowchart TD
     input --> unbundle
     unbundle --> src
     src --> edit
-    edit --> sync
-    sync --> build
+    edit --> build
     build --> output
     output --> upload
 ```
@@ -141,33 +133,26 @@ flowchart TD
 
 ## Routing Logic
 
-CSS rules are routed based on the `data-css-anchor` attribute in selectors:
+The bundle uses `/* @file: path */` markers to track file boundaries. When unbundling:
 
-| Selector Pattern | Destination |
-|-----------------|-------------|
-| `#customcss [data-css-anchor="header"]` | `src/by-css-anchor/header.css` |
-| `#customcss [data-css-anchor="footer"] .link` | `src/by-css-anchor/footer.css` |
-| `.global-class { ... }` (no anchor) | `src/common/global.css` |
-| Multiple anchors in one rule | `src/common/global.css` |
-| Unparseable CSS | `src/quarantine.css` |
+| Marker | Destination |
+|--------|-------------|
+| `/* @file: src/common/global.css */` | `src/common/global.css` |
+| `/* @file: src/by-css-anchor/header.css */` | `src/by-css-anchor/header.css` |
 
-### Examples
+Markers are automatically injected during `npm run build` based on `main.css` imports.
+
+### Example Bundle Output
 
 ```css
-/* → src/by-css-anchor/header.css */
-#customcss [data-css-anchor="header"] {
-  background: #fff;
-}
-
-/* → src/common/global.css (no anchor) */
+/* @file: src/common/global.css */
 body {
   margin: 0;
 }
 
-/* → src/common/global.css (multiple anchors) */
-#customcss [data-css-anchor="header"],
-#customcss [data-css-anchor="footer"] {
-  padding: 20px;
+/* @file: src/by-css-anchor/header.css */
+#customcss [data-css-anchor="header"] {
+  background: #fff;
 }
 ```
 
@@ -178,18 +163,15 @@ body {
 | Command | Description |
 |---------|-------------|
 | `npm run build` | Build CSS bundle from source |
-| `npm run dev` | Start Vite dev server |
+| `npm run dev` | Start Vite dev server with HMR |
 | `npm run unbundle` | Extract CSS from `input/platform-bundle.css` |
-| `npm run sync` | Check if main.css imports are in sync |
-| `npm run sync -- --fix` | Auto-add missing imports to main.css |
 
 ---
 
 ## Backward Compatibility
 
-This system is designed to work with:
+This system requires bundles built with this tool (containing `/* @file: */` markers).
 
-- ✅ **Existing CSS** - Any valid CSS will be parsed and routed
-- ✅ **Legacy bundles** - No special markers required
-- ✅ **Manual edits** - Changes in the bundle are preserved during unbundle
-- ✅ **New anchors** - Automatically creates new files for unknown anchors
+- ✅ **Round-trip safe** - Build and unbundle preserve file structure
+- ✅ **Manual edits** - Edit source files, rebuild to update bundle
+- ✅ **New files** - Add new CSS files, import in main.css
