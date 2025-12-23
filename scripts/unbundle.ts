@@ -21,10 +21,7 @@ import {
   writeFileSafe,
   fileExists,
 } from "./lib";
-import { parseFileMarker } from "./plugins/css-file-markers";
-
-/** Regex to match file markers */
-const FILE_MARKER_REGEX = /\/\*\s*@file:\s*([^\s*]+)\s*\*\//g;
+import { FILE_MARKER_REGEX } from "./plugins/css-file-markers";
 
 /**
  * Parse bundle by file markers

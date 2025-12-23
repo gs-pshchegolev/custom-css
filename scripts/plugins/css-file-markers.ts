@@ -14,27 +14,17 @@ import { readFileSync, existsSync } from 'fs';
 import { ROOT_DIR, SRC_DIR } from '../lib/config';
 
 /** Marker comment format */
-const MARKER_PREFIX = '/* @file:';
-const MARKER_SUFFIX = '*/';
+export const MARKER_PREFIX = "/* @file:";
+export const MARKER_SUFFIX = "*/";
 
+/** Regex to match and capture file markers (for splitting bundles) */
+export const FILE_MARKER_REGEX = /\/\*\s*@file:\s*([^\s*]+)\s*\*\//g;
 /**
  * Generate a file marker comment
  */
 export function createFileMarker(filePath: string): string {
   const relativePath = relative(ROOT_DIR, filePath).replace(/\\/g, '/');
   return `${MARKER_PREFIX} ${relativePath} ${MARKER_SUFFIX}`;
-}
-
-/**
- * Parse a file marker and extract the path
- */
-export function parseFileMarker(comment: string): string | null {
-  const trimmed = comment.trim();
-  if (!trimmed.startsWith(MARKER_PREFIX) || !trimmed.endsWith(MARKER_SUFFIX)) {
-    return null;
-  }
-  const inner = trimmed.slice(MARKER_PREFIX.length, -MARKER_SUFFIX.length).trim();
-  return inner || null;
 }
 
 /**
