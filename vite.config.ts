@@ -2,6 +2,13 @@ import { defineConfig } from 'vite';
 import { ENTRY_FILE, generateBanner } from './scripts/lib';
 
 export default defineConfig({
+  server: {
+    // Expose to network (required for port forwarding)
+    host: true,
+    // Allow cross-origin requests (required for external platform)
+    cors: true
+  },
+  
   build: {
     // Enable Source Maps for traceability
     sourcemap: true,
