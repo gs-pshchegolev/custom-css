@@ -39,6 +39,43 @@ Or as a single script that loads both:
 
 Changes in `src/` files will hot-reload instantly in the browser.
 
+## Chrome DevTools Local Overrides
+
+An alternative to platform HTML widgets - use Chrome's Local Overrides to inject the Vite client into any page.
+
+### Setup (one-time)
+
+1. Open Chrome DevTools (`F12` or `Cmd+Option+I`)
+2. Go to **Sources** tab
+3. Click **Overrides** in the left sidebar (you may need to click `>>` to find it)
+4. Click **Select folder for overrides** → create/select a folder (e.g., `~/chrome-overrides`)
+5. Click **Allow** when Chrome asks for permission
+
+### Enable HMR on a page
+
+1. Run `npm run dev` and get your forwarded URL
+2. In DevTools **Sources** → **Page**, find the HTML file (usually the main document)
+3. Right-click → **Save for overrides**
+4. Add this script inside `<head>` or before `</body>`:
+
+```html
+<script type="module">
+  import 'https://YOUR-FORWARDED-URL/@vite/client';
+  import 'https://YOUR-FORWARDED-URL/src/main.css';
+</script>
+```
+
+5. Save (`Cmd+S`) and refresh the page
+6. Console should show `[vite] connected.`
+
+### Notes
+
+- You need to add the script to **each HTML page** you want HMR on
+- Overrides persist across browser restarts
+- Purple dot on file icon = file has local override
+- To disable: uncheck **Enable Local Overrides** in the Overrides panel
+- To remove: right-click the override file → **Delete**
+
 ## Tips
 
 - Keep terminal running with `npm run dev`
