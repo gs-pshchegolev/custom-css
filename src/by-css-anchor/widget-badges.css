@@ -1,0 +1,12 @@
+/**
+ * Badges Earned
+ * CSS Anchor: "widget-badges"
+ * 🧩 Widget, 👤 User
+ *
+ * Shows recently earned badges by community members.
+ * Displays badge icon, username, and which badge they earned.
+ */
+
+#customcss #root [data-css-anchor="widget-badges"] {
+  /* Your custom styles here */
+}

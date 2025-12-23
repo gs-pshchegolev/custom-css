@@ -1,0 +1,12 @@
+/**
+ * Topic List Item Card Header
+ * CSS Anchor: "topic-list-item-card_header"
+ * 📝 Content
+ *
+ * Header section of topic card.
+ * Contains title, author, and metadata.
+ */
+
+#customcss #root [data-css-anchor="topic-list-item-card_header"] {
+  /* Your custom styles here */
+}

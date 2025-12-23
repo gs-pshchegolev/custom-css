@@ -1,0 +1,12 @@
+/**
+ * Knowledge Base Navigation
+ * CSS Anchor: "knowledge-base-navigation"
+ * 🏗️ Layout, 🎛️ Control
+ *
+ * Navigation sidebar for knowledge base articles.
+ * Shows article hierarchy, categories, and quick links.
+ */
+
+#customcss #root [data-css-anchor="knowledge-base-navigation"] {
+  /* Your custom styles here */
+}

@@ -1,0 +1,18 @@
+/* Import order matters! Global first, then specific widgets. */
+
+/* Global styles */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: sans-serif;
+}
+
+/* Login widget styles */
+
+/* Search widget styles */
+
+/* New widget added by another developer directly in bundle */

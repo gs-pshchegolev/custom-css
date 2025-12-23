@@ -1,0 +1,12 @@
+/**
+ * Selected Language Icon
+ * CSS Anchor: "selected-language-icon"
+ * 🎛️ Control
+ *
+ * Current language indicator icon.
+ * Shows which language is currently active.
+ */
+
+#customcss #root [data-css-anchor="selected-language-icon"] {
+  /* Your custom styles here */
+}

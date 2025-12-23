@@ -1,0 +1,12 @@
+/**
+ * Cookie Banner
+ * CSS Anchor: "cookie-banner"
+ * 🔔 Notification, 🎛️ Control
+ *
+ * GDPR cookie consent banner shown to visitors.
+ * Allows users to accept or customize their privacy preferences.
+ */
+
+#customcss #root [data-css-anchor="cookie-banner"] {
+  /* Your custom styles here */
+}

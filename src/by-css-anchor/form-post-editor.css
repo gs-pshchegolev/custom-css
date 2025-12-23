@@ -1,0 +1,12 @@
+/**
+ * Form Post Editor
+ * CSS Anchor: "form-post-editor"
+ * 📝 Content, 🎛️ Control
+ *
+ * The rich text editor used when creating new topics.
+ * Includes formatting toolbar and text input area.
+ */
+
+#customcss #root [data-css-anchor="form-post-editor"] {
+  /* Your custom styles here */
+}

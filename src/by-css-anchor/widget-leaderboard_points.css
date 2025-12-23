@@ -1,0 +1,12 @@
+/**
+ * Leaderboard Points
+ * CSS Anchor: "widget-leaderboard_points"
+ * 🧩 Widget, 👤 User
+ *
+ * Points leaderboard widget.
+ * Shows top users by points earned.
+ */
+
+#customcss #root [data-css-anchor="widget-leaderboard_points"] {
+  /* Your custom styles here */
+}

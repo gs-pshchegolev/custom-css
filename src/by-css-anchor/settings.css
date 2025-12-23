@@ -1,0 +1,12 @@
+/**
+ * Settings
+ * CSS Anchor: "settings"
+ * 👤 User, 🎛️ Control
+ *
+ * User account settings and preferences page.
+ * Includes profile editing, notifications, and privacy options.
+ */
+
+#customcss #root [data-css-anchor="settings"] {
+  /* Your custom styles here */
+}

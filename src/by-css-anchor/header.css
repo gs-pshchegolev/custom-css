@@ -1,0 +1,12 @@
+/**
+ * Header
+ * CSS Anchor: "header"
+ * 🏗️ Layout
+ *
+ * The brand header bar at the very top of the community.
+ * Contains your logo and optional link back to your main website.
+ */
+
+#customcss #root [data-css-anchor="header"] {
+  /* Your custom styles here */
+}

@@ -1,0 +1,12 @@
+/**
+ * Topic List Item Card
+ * CSS Anchor: "topic-list-item-card"
+ * 📝 Content
+ *
+ * Card-style topic listing item.
+ * Shows topic as a visual card with preview.
+ */
+
+#customcss #root [data-css-anchor="topic-list-item-card"] {
+  /* Your custom styles here */
+}

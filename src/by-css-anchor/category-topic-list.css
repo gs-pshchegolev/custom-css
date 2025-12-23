@@ -1,0 +1,12 @@
+/**
+ * Category Topic List
+ * CSS Anchor: "category-topic-list"
+ * 📝 Content
+ *
+ * Topic listing within a specific category.
+ * Shows all topics belonging to the selected category.
+ */
+
+#customcss #root [data-css-anchor="category-topic-list"] {
+  /* Your custom styles here */
+}

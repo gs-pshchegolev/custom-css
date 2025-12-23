@@ -1,0 +1,12 @@
+/**
+ * Theme Configurator
+ * CSS Anchor: "theme-configurator"
+ * 🎛️ Control
+ *
+ * Theme customization panel for community admins.
+ * Allows adjusting colors, fonts, and visual settings.
+ */
+
+#customcss #root [data-css-anchor="theme-configurator"] {
+  /* Your custom styles here */
+}

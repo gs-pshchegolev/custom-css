@@ -1,0 +1,12 @@
+/**
+ * Third Party Widget
+ * CSS Anchor: "widget-third_party_widget"
+ * 🧩 Widget
+ *
+ * Container for third-party integrations.
+ * Embeds external widgets and scripts.
+ */
+
+#customcss #root [data-css-anchor="widget-third_party_widget"] {
+  /* Your custom styles here */
+}

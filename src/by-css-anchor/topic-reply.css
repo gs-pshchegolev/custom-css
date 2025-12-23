@@ -1,0 +1,12 @@
+/**
+ * Topic Reply
+ * CSS Anchor: "topic-reply"
+ * 📝 Content
+ *
+ * Individual reply within a topic.
+ * Shows reply content, author, and actions.
+ */
+
+#customcss #root [data-css-anchor="topic-reply"] {
+  /* Your custom styles here */
+}

@@ -1,0 +1,12 @@
+/**
+ * Topic Helpfulness
+ * CSS Anchor: "topic-helpfulness"
+ * 📝 Content, 🎛️ Control
+ *
+ * "Was this helpful?" feedback section on topics.
+ * Allows users to rate content usefulness.
+ */
+
+#customcss #root [data-css-anchor="topic-helpfulness"] {
+  /* Your custom styles here */
+}

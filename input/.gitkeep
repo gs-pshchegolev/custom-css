@@ -1,0 +1,5 @@
+# Place platform-bundle.css here
+
+This folder is for CSS bundles downloaded from the community platform.
+
+Run `npm run unbundle` to process the bundle.

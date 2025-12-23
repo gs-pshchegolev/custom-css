@@ -1,0 +1,12 @@
+/**
+ * Footer
+ * CSS Anchor: "footer"
+ * 🏗️ Layout
+ *
+ * The footer bar at the bottom of the community.
+ * Can contain custom HTML, links, or SSI content.
+ */
+
+#customcss #root [data-css-anchor="footer"] {
+  /* Your custom styles here */
+}

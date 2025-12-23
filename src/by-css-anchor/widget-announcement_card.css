@@ -1,0 +1,12 @@
+/**
+ * Announcement Card
+ * CSS Anchor: "widget-announcement_card"
+ * 🧩 Widget, 🔔 Notification
+ *
+ * Announcement or notification card widget.
+ * Displays important community announcements.
+ */
+
+#customcss #root [data-css-anchor="widget-announcement_card"] {
+  /* Your custom styles here */
+}

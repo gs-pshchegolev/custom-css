@@ -1,0 +1,12 @@
+/**
+ * Banner
+ * CSS Anchor: "widget-banner"
+ * 🧩 Widget, 🔔 Notification
+ *
+ * Promotional banner widget.
+ * Displays configurable banner with image and text.
+ */
+
+#customcss #root [data-css-anchor="widget-banner"] {
+  /* Your custom styles here */
+}

@@ -1,0 +1,12 @@
+/**
+ * Main Menu
+ * CSS Anchor: "main-menu"
+ * 🏗️ Layout, 🎛️ Control
+ *
+ * The primary navigation menu of the community.
+ * Contains links to main sections and categories.
+ */
+
+#customcss #root [data-css-anchor="main-menu"] {
+  /* Your custom styles here */
+}

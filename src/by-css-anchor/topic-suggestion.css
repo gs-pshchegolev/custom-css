@@ -1,0 +1,12 @@
+/**
+ * Topic Suggestion
+ * CSS Anchor: "topic-suggestion"
+ * 🎛️ Control, 🔍 Search
+ *
+ * Similar topic suggestions when creating new posts.
+ * Helps prevent duplicate questions.
+ */
+
+#customcss #root [data-css-anchor="topic-suggestion"] {
+  /* Your custom styles here */
+}

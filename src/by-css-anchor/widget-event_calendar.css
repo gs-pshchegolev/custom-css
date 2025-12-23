@@ -1,0 +1,12 @@
+/**
+ * Event Calendar
+ * CSS Anchor: "widget-event_calendar"
+ * 🧩 Widget, 📝 Content
+ *
+ * Events calendar widget.
+ * Shows upcoming events in calendar view.
+ */
+
+#customcss #root [data-css-anchor="widget-event_calendar"] {
+  /* Your custom styles here */
+}

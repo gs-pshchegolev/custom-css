@@ -1,0 +1,12 @@
+/**
+ * Search Form
+ * CSS Anchor: "search-form"
+ * 🔍 Search, 🎛️ Control
+ *
+ * The search input field and submit button.
+ * Used for initiating searches across the community.
+ */
+
+#customcss #root [data-css-anchor="search-form"] {
+  /* Your custom styles here */
+}

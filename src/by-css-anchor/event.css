@@ -1,0 +1,12 @@
+/**
+ * Event
+ * CSS Anchor: "event"
+ * 📝 Content
+ *
+ * Individual event detail page.
+ * Shows event information, date, location, and registration.
+ */
+
+#customcss #root [data-css-anchor="event"] {
+  /* Your custom styles here */
+}

@@ -1,0 +1,12 @@
+/**
+ * Common Content
+ * CSS Anchor: "common-content"
+ * 📝 Content
+ *
+ * Shared content wrapper used across different pages.
+ * Provides consistent styling for content blocks.
+ */
+
+#customcss #root [data-css-anchor="common-content"] {
+  /* Your custom styles here */
+}

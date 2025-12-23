@@ -1,0 +1,12 @@
+/**
+ * Sorting Dropdown
+ * CSS Anchor: "sorting-dropdown-component"
+ * 🎛️ Control
+ *
+ * Content sorting dropdown selector.
+ * Allows sorting topics by date, popularity, etc.
+ */
+
+#customcss #root [data-css-anchor="sorting-dropdown-component"] {
+  /* Your custom styles here */
+}

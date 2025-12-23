@@ -1,0 +1,12 @@
+/**
+ * Ask Question Widget
+ * CSS Anchor: "ask-question-widget"
+ * 🧩 Widget, 🎛️ Control
+ *
+ * Quick question submission widget.
+ * Prompts users to ask questions or start discussions.
+ */
+
+#customcss #root [data-css-anchor="ask-question-widget"] {
+  /* Your custom styles here */
+}

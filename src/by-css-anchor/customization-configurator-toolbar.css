@@ -1,0 +1,12 @@
+/**
+ * Customization Toolbar
+ * CSS Anchor: "customization-configurator-toolbar"
+ * 🎛️ Control
+ *
+ * Admin toolbar for live customization.
+ * Provides quick access to theme and layout options.
+ */
+
+#customcss #root [data-css-anchor="customization-configurator-toolbar"] {
+  /* Your custom styles here */
+}

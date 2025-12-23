@@ -1,0 +1,12 @@
+/**
+ * Breadcrumb
+ * CSS Anchor: "widget-breadcrumb"
+ * 🧩 Widget, 🏗️ Layout
+ *
+ * Breadcrumb navigation widget.
+ * Shows current location in site hierarchy.
+ */
+
+#customcss #root [data-css-anchor="widget-breadcrumb"] {
+  /* Your custom styles here */
+}

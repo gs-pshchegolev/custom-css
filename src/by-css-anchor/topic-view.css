@@ -1,0 +1,12 @@
+/**
+ * Topic View
+ * CSS Anchor: "topic-view"
+ * 📝 Content
+ *
+ * The main topic/post page where users read and reply to discussions.
+ * Includes the original post, replies, and interaction buttons.
+ */
+
+#customcss #root [data-css-anchor="topic-view"] {
+  /* Your custom styles here */
+}

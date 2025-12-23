@@ -1,0 +1,12 @@
+/**
+ * Skip To Content
+ * CSS Anchor: "skip-to-content"
+ * 🏗️ Layout
+ *
+ * Accessibility skip link for keyboard navigation.
+ * Allows users to jump directly to main content.
+ */
+
+#customcss #root [data-css-anchor="skip-to-content"] {
+  /* Your custom styles here */
+}

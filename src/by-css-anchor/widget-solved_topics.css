@@ -1,0 +1,12 @@
+/**
+ * Solved Topics
+ * CSS Anchor: "widget-solved_topics"
+ * 🧩 Widget, 📝 Content
+ *
+ * Solved topics listing widget.
+ * Shows questions that have accepted answers.
+ */
+
+#customcss #root [data-css-anchor="widget-solved_topics"] {
+  /* Your custom styles here */
+}

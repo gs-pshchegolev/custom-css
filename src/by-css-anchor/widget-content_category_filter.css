@@ -1,0 +1,12 @@
+/**
+ * Content Category Filter
+ * CSS Anchor: "widget-content_category_filter"
+ * 🧩 Widget, 🎛️ Control
+ *
+ * Category filter widget for content.
+ * Allows filtering topics by category.
+ */
+
+#customcss #root [data-css-anchor="widget-content_category_filter"] {
+  /* Your custom styles here */
+}

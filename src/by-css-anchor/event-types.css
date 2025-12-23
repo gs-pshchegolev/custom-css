@@ -1,0 +1,12 @@
+/**
+ * Event Types
+ * CSS Anchor: "event-types"
+ * 🎛️ Control
+ *
+ * Event type filter or selector component.
+ * Allows filtering events by category or type.
+ */
+
+#customcss #root [data-css-anchor="event-types"] {
+  /* Your custom styles here */
+}
