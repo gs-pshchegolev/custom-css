@@ -20,12 +20,10 @@ custom-css/
 │   └── platform-bundle.css
 ├── src/                      # 📝 SOURCE: Editable CSS files
 │   ├── main.css              #    Entry point (imports all files)
-│   ├── common/
-│   │   └── global.css        #    Global styles (no anchor)
-│   └── by-css-anchor/        #    Widget styles (by data-css-anchor)
-│       ├── header.css
-│       ├── footer.css
-│       └── ...
+│   ├── common/               #    Global styles
+│   ├── by-css-anchor/        #    Widget styles (by data-css-anchor)
+│   ├── pages/                #    Page-specific styles
+│   └── parts/                #    Reusable component styles
 └── scripts/                  # 🔧 Build tools
 ```
 
@@ -62,7 +60,7 @@ npm run dev       # Watch mode for development
 
 ### Flow 2: Reverse Engineering (Bundle → Source)
 
-Extract CSS from a community bundle back into organized source files.
+Extract CSS from a bundle back into organized source files using file markers.
 
 ```mermaid
 flowchart LR
@@ -72,18 +70,18 @@ flowchart LR
     
     subgraph process[Processing]
         unbundle[npm run unbundle]
-        parse{Parse by<br/>file markers}
+        parse{Split by<br/>file markers}
     end
     
     subgraph src[Source Files]
-        global[common/global.css]
-        widgets[by-css-anchor/*.css]
+        files[src/**/*.css]
+        main[main.css<br/>auto-generated]
     end
     
     community --> unbundle
     unbundle --> parse
-    parse --> global
-    parse --> widgets
+    parse --> files
+    parse --> main
 ```
 
 **Commands:**
@@ -91,7 +89,7 @@ flowchart LR
 # 1. Place bundle in input folder
 cp ~/Downloads/community-styles.css input/platform-bundle.css
 
-# 2. Run unbundle
+# 2. Run unbundle (extracts files and generates main.css)
 npm run unbundle
 ```
 
@@ -131,18 +129,11 @@ flowchart TD
 
 ---
 
-## Routing Logic
+## How It Works
 
-The bundle uses `/* @file: path */` markers to track file boundaries. When unbundling:
+The build injects `/* @file: path */` markers into the bundle. These markers track file boundaries, enabling unbundling back to source.
 
-| Marker | Destination |
-|--------|-------------|
-| `/* @file: src/common/global.css */` | `src/common/global.css` |
-| `/* @file: src/by-css-anchor/header.css */` | `src/by-css-anchor/header.css` |
-
-Markers are automatically injected during `npm run build` based on `main.css` imports.
-
-### Example Bundle Output
+### Build Output Example
 
 ```css
 /* @file: src/common/global.css */
@@ -150,11 +141,17 @@ body {
   margin: 0;
 }
 
-/* @file: src/by-css-anchor/header.css */
-#customcss [data-css-anchor="header"] {
+/* @file: src/pages/home.css */
+.home-banner {
   background: #fff;
 }
 ```
+
+### Unbundle Process
+
+1. Splits bundle by `/* @file: */` markers
+2. Writes each section to its original path
+3. Auto-generates `main.css` with @import statements
 
 ---
 
@@ -168,10 +165,8 @@ body {
 
 ---
 
-## Backward Compatibility
+## Notes
 
-This system requires bundles built with this tool (containing `/* @file: */` markers).
-
-- ✅ **Round-trip safe** - Build and unbundle preserve file structure
-- ✅ **Manual edits** - Edit source files, rebuild to update bundle
-- ✅ **New files** - Add new CSS files, import in main.css
+- **Round-trip safe** - Build and unbundle preserve file structure
+- **Markers required** - Unbundle only works with bundles built by this tool
+- **main.css auto-generated** - Unbundle recreates main.css from markers
