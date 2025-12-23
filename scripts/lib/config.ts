@@ -19,7 +19,7 @@ export const INPUT_BUNDLE_PATH = resolve(INPUT_DIR, 'platform-bundle.css');
 // Output configuration (build output)
 export const OUTPUT_DIR = resolve(ROOT_DIR, 'dist');
 export const BUNDLE_NAME = 'platform-bundle';
-export const OUTPUT_BUNDLE_PATH = resolve(OUTPUT_DIR, `assets/${BUNDLE_NAME}.css`);
+export const OUTPUT_BUNDLE_PATH = resolve(OUTPUT_DIR, `${BUNDLE_NAME}.css`);
 
 // Source configuration
 export const SRC_DIR = resolve(ROOT_DIR, 'src');

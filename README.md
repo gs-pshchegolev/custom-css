@@ -18,8 +18,7 @@ custom-css/
 ├── input/                    # 📥 INPUT: Place community bundles here
 │   └── platform-bundle.css   #    (downloaded from platform)
 ├── dist/                     # 📤 OUTPUT: Built bundles go here
-│   └── assets/
-│       └── platform-bundle.css
+│   └── platform-bundle.css
 ├── src/                      # 📝 SOURCE: Editable CSS files
 │   ├── main.css              #    Entry point (imports all files)
 │   ├── common/

@@ -1,37 +1,31 @@
 import { defineConfig } from 'vite';
 import { ENTRY_FILE, generateBanner } from './scripts/lib';
+import { removeEmptyCssPlugin } from './scripts/plugins/remove-empty-css';
 
 export default defineConfig({
   server: {
-    // Expose to network (required for port forwarding)
-    host: true,
-    // Allow cross-origin requests (required for external platform)
-    cors: true
+    host: true,   // Expose to network for port forwarding
+    cors: true    // Allow cross-origin requests from external platform
   },
   
+  plugins: [
+    removeEmptyCssPlugin()  // Strip files with no CSS rules from bundle
+  ],
+
   build: {
-    // Enable Source Maps for traceability
-    sourcemap: true,
-    
-    // Do not minify - keep CSS readable
-    minify: false,
+    sourcemap: true,      // Enable source maps for traceability
+    minify: false,        // Keep CSS readable
     cssMinify: false,
-    
-    // Clean the folder before building
-    emptyOutDir: true,
+    emptyOutDir: true,    // Clean dist/ before building
 
     rollupOptions: {
       input: {
         'platform-bundle': ENTRY_FILE,
       },
-
       output: {
-        // Inject the banner header
-        banner: generateBanner(),
-
-        // Fixed filenames (no hashing)
-        entryFileNames: `assets/[name].js`,
-        assetFileNames: `assets/[name].[ext]`,
+        banner: generateBanner(),       // Inject version header
+        entryFileNames: '[name].js',    // No hash, flat structure
+        assetFileNames: '[name].[ext]',
       }
     }
   }
