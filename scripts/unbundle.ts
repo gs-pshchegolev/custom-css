@@ -106,15 +106,19 @@ function unbundle(): void {
   // Parse by file markers
   const files = parseByMarkers(bundleContent);
 
+  // Collect file paths for main.css generation
+  const importPaths: string[] = [];
+
   // Write files
   let updatedCount = 0;
   let anchorCount = 0;
 
   for (const [filePath, content] of files) {
-    // Skip main.css - it only contains @import statements
-    if (filePath === "src/main.css") {
-      console.log(`⏭️  Skipped: ${filePath} (manifest file)`);
-      continue;
+    // Collect paths for main.css (excluding main.css itself)
+    if (filePath !== "src/main.css" && filePath.startsWith("src/")) {
+      // Convert to relative import path from main.css perspective
+      const importPath = "./" + filePath.replace("src/", "");
+      importPaths.push(importPath);
     }
 
     const fullPath = join(ROOT_DIR, filePath);
@@ -127,6 +131,16 @@ function unbundle(): void {
       console.log(`✅ Updated: ${filePath}`);
     }
     updatedCount++;
+  }
+
+  // Generate main.css with @import statements
+  if (importPaths.length > 0) {
+    const mainCssContent = importPaths
+      .map(p => `@import "${p}";`)
+      .join("\n") + "\n";
+    const mainCssPath = join(ROOT_DIR, "src/main.css");
+    writeFileSafe(mainCssPath, mainCssContent);
+    console.log(`✅ Generated: src/main.css (${importPaths.length} imports)`);
   }
 
   console.log(`\n📝 Updated ${updatedCount} file(s) (${anchorCount} anchors)`);

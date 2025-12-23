@@ -107,6 +107,7 @@ export function cssFileMarkersPlugin(): Plugin {
   return {
     name: 'css-file-markers',
     enforce: 'pre',
+    apply: 'build',  // Only run during build, not dev server
     
     // Intercept the entry CSS file and manually resolve all imports
     load(id) {
