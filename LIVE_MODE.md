@@ -47,8 +47,8 @@ Add this script to TPS to enable debug mode with Vite HMR:
 <script type="module">
   try {
     const params = new URLSearchParams(window.location.search);
-    const viteHost = localStorage.getItem('__viteDevServer');
-    if (params.has('__debugMode') && viteHost) {
+    if (params.has('__debugMode') && localStorage.hasItem('__viteDevServer');) {
+      const viteHost = localStorage.getItem('__viteDevServer');
       await import(`${viteHost}/@vite/client`);
       await import(`${viteHost}/src/main.css`);
     }

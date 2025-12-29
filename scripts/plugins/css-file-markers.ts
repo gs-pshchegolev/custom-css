@@ -13,12 +13,33 @@ import { resolve, relative, dirname } from 'path';
 import { readFileSync, existsSync } from 'fs';
 import { ROOT_DIR, SRC_DIR } from '../lib/config';
 
-/** Marker comment format */
-export const MARKER_PREFIX = "/* @file:";
-export const MARKER_SUFFIX = "*/";
+/** Marker keyword for file boundaries */
+export const FILE_MARKER_TOKEN = "@file:";
 
-/** Regex to match and capture file markers (for splitting bundles) */
-export const FILE_MARKER_REGEX = /\/\*\s*@file:\s*([^\s*]+)\s*\*\//g;
+/** Marker comment format */
+export const MARKER_PREFIX = "/* 📁 @file:";
+export const MARKER_SUFFIX = "— ⛔ Keep this comment */";
+
+/**
+ * Parse a file marker comment and extract the path
+ * Format: /* 📁 @file: src/path/file.css — ⛔ Keep this comment *​/
+ */
+export function parseFileMarker(comment: string): string | null {
+  // Remove comment delimiters and trim
+  const body = comment.replace(/^\/\*|\*\/$/g, '').trim();
+  // Split by whitespace: [📁, @file:, path, —, ⛔, Keep, this, comment]
+  const [_emoji, marker, path] = body.split(/\s+/);
+  
+  if (marker === FILE_MARKER_TOKEN && path) {
+    return path;
+  }
+  return null;
+}
+
+/** Bundle header warning */
+const BUNDLE_HEADER = `/* 🔧 Built with custom-css toolkit | Markers enable round-trip editing */
+
+`;
 /**
  * Generate a file marker comment
  */
@@ -52,7 +73,7 @@ function resolveImports(filePath: string, visited = new Set<string>()): string {
   
   // If no imports, just return the file with marker
   if (!hasImports) {
-    return `${marker}\n${content}\n`;
+    return `${marker}\n${content.trim()}\n`;
   }
   
   // Process @import statements
@@ -107,7 +128,7 @@ export function cssFileMarkersPlugin(): Plugin {
       // Only process entry file (main.css), let Vite handle the resolved output
       if (!id.endsWith('main.css')) return null;
       
-      const result = resolveImports(id);
+      const result = BUNDLE_HEADER + resolveImports(id);
       return result;
     }
   };

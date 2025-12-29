@@ -6,7 +6,7 @@
  * Reads the bundled CSS file and splits it back into source files
  * based on file markers injected during build.
  * 
- * Marker format: /* @file: src/by-css-anchor/header.css *​/
+ * Marker format: /* 📁 @file: src/path/file.css — ⛔ Keep this comment *​/
  * 
  * Usage: npm run unbundle
  */
@@ -21,26 +21,45 @@ import {
   writeFileSafe,
   fileExists,
 } from "./lib";
-import { FILE_MARKER_REGEX } from "./plugins/css-file-markers";
+import { FILE_MARKER_TOKEN, parseFileMarker } from "./plugins/css-file-markers";
+
+/** Regex to match file marker comments (single line) */
+const MARKER_COMMENT_REGEX = /\/\*\s*📁\s*@file:[^*]*\*\//g;
 
 /**
  * Parse bundle by file markers
  */
 function parseByMarkers(bundleContent: string): Map<string, string> {
   const files = new Map<string, string>();
-
-  // Split by markers, keeping the markers
-  const parts = bundleContent.split(FILE_MARKER_REGEX);
-
-  // parts alternates: [content-before-first-marker, path1, content1, path2, content2, ...]
-  // The first element is content before any marker (usually just the banner comment)
-
-  for (let i = 1; i < parts.length; i += 2) {
-    const filePath = parts[i]?.trim();
-    const content = parts[i + 1]?.trim();
-
-    if (filePath && content) {
-      files.set(filePath, content + "\n");
+  
+  // Find all file marker comments
+  const markerPositions: { path: string; start: number; end: number }[] = [];
+  
+  let match;
+  while ((match = MARKER_COMMENT_REGEX.exec(bundleContent)) !== null) {
+    const comment = match[0];
+    const path = parseFileMarker(comment);
+    if (path) {
+      markerPositions.push({
+        path,
+        start: match.index,
+        end: match.index + comment.length
+      });
+    }
+  }
+  
+  // Extract content between markers
+  for (let i = 0; i < markerPositions.length; i++) {
+    const current = markerPositions[i];
+    const next = markerPositions[i + 1];
+    
+    const contentStart = current.end;
+    const contentEnd = next ? next.start : bundleContent.length;
+    const content = bundleContent.slice(contentStart, contentEnd).trim();
+    
+    if (current.path) {
+      // Include file even if empty (preserves structure)
+      files.set(current.path, content ? content + "\n" : "");
     }
   }
 
@@ -86,8 +105,7 @@ function unbundle(): void {
   console.log(`   Size: ${bundleContent.length} bytes\n`);
 
   // Check for file markers
-  const hasMarkers = FILE_MARKER_REGEX.test(bundleContent);
-  FILE_MARKER_REGEX.lastIndex = 0; // Reset regex
+  const hasMarkers = bundleContent.includes(FILE_MARKER_TOKEN);
 
   if (!hasMarkers) {
     console.error("❌ No file markers found in bundle!");
