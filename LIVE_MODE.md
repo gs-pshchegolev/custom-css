@@ -39,6 +39,44 @@ Or as a single script that loads both:
 
 Changes in `src/` files will hot-reload instantly in the browser.
 
+## TPS Integration
+
+Add this script to TPS to enable debug mode with Vite HMR:
+
+```html
+<script type="module">
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const viteHost = localStorage.getItem('__viteDevServer');
+    if (params.has('__debugMode') && viteHost) {
+      await import(`${viteHost}/@vite/client`);
+      await import(`${viteHost}/src/main.css`);
+    }
+  } catch (error) {
+    console.error('Vite HMR Error:', error);
+  } finally {
+    console.log('%c⚠️ DEBUG CUSTOM CSS IS ON - REMOVE BEFORE GOING LIVE ⚠️', 'background: red; color: white; font-size: 20px; padding: 10px;');
+  }
+</script>
+```
+
+### Activation
+
+1. Run `npm run dev` and get your forwarded URL
+2. Set the Vite URL in localStorage (run in browser console):
+
+```javascript
+localStorage.setItem('vite', 'https://YOUR-FORWARDED-URL');
+```
+
+3. Add `?__debugMode` to any page URL to activate HMR
+
+### Notes
+
+- Vite URL persists in localStorage until cleared
+- To change: `localStorage.setItem('vite', 'NEW-URL')`
+- To disable: `localStorage.removeItem('vite')`
+
 ## Chrome DevTools Local Overrides
 
 An alternative to platform HTML widgets - use Chrome's Local Overrides to inject the Vite client into any page.
